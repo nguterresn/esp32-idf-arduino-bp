@@ -1,0 +1,6 @@
+.clang
+.DS_Store
+managed_components
+
+*.cache
+*.lock
