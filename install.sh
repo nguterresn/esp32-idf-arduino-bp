@@ -1,17 +1,21 @@
-#!/bin/bash
+#!/bin/zsh
 
-brew install cmake ninja dfu-util
-brew install python3
-cd $HOME
-if ! [ $HOME/esp-idf ]; then
-  echo -e "\033[1;33m Insert the esp-idf version (default is v5.1.4):"
-  read version
-  git clone -b $version --recursive https://github.com/espressif/esp-idf.git
-  cd $HOME/esp-idf
-  ./install.sh all
+if [ ! -d "$HOME/esp-idf" ]; then
+  cd "$HOME" || exit 1
+  echo -e "\033[1;33mInsert the esp-idf version (default is v5.1.4):\033[0m"
+  read -r version
+  # Set default version if none is provided
+  version=${version:-v5.1.4}
+  
+  echo -e "\033[1;32mCloning ESP-IDF repository...\033[0m"
+  if git clone -b "$version" --recursive https://github.com/espressif/esp-idf.git; then
+    cd "$HOME/esp-idf" || exit 1
+    echo -e "\033[1;32mInstalling ESP-IDF tools...\033[0m"
+    ./install.sh all
+  else
+    echo -e "\033[1;31mFailed to clone the repository. Please check the version or your internet connection.\033[0m"
+    exit 1
+  fi
+else
+  echo -e "\033[1;33mESP-IDF is already installed at $HOME/esp-idf.\033[0m"
 fi
-if ! alias get_idf >/dev/null 2>&1; then
-  echo "alias get_idf='. $HOME/esp-idf/export.sh'" >> $HOME/.zshrc
-  source $HOME/.zshrc
-fi
-echo -e "\033[0;32m esp-idf-arduino-bp is successfully installed."
