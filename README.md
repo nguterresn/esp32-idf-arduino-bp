@@ -5,6 +5,8 @@
 ```BASH
 git clone --recursive -j8 https://github.com/nguterresn/esp32-idf-arduino-bp.git your_custom_path_or_name
 cd your_custom_path_or_name
+rm -rf .git
+git init
 ```
 
 ### Build
